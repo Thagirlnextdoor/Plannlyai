@@ -20,10 +20,13 @@ test("goal to action to recovery", async ({ page }) => {
   await page.getByRole("button", { name: /start my plan/i }).click();
   await expect(page.getByRole("heading", { name: "E2E coaching business" })).toBeVisible({ timeout: 30_000 });
 
-  await page.goto("/today");
-  await expect(page.getByText("E2E coaching business", { exact: false }).first()).toBeVisible({ timeout: 30_000 });
+  // Complete the new goal's first daily task from its own page
+  // (Today curation ranks older tasks first, so new tasks may sit below).
   await page.getByRole("button", { name: /complete/i }).first().click();
-  await expect(page.getByText(/1 of/i).first()).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole("button", { name: /reopen/i }).first()).toBeVisible({ timeout: 30_000 });
+
+  await page.goto("/today");
+  await expect(page.getByRole("heading", { name: /focus on today/i })).toBeVisible({ timeout: 30_000 });
 
   await page.goto("/assistant");
   await page.getByPlaceholder(/focus on today/i).fill("I fell behind");
