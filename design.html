@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Plannlyai — Design System Preview (Phase D)</title>
+<style>
+:root{
+  --bg:#F7F6F3; --surface:#FFFFFF; --text:#1E1E1E; --muted:#6B6B6B;
+  --border:#E8E4DC; --primary:#0F766E; --primary-ink:#FFFFFF;
+  --success:#15803D; --warm:#D97706; --danger:#DC2626;
+  --radius:12px; --pill:999px;
+  --shadow:0 1px 2px rgba(0,0,0,.06);
+  --font:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 20px 80px}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.logo{width:36px;height:36px;border-radius:10px;background:var(--primary);color:#fff;display:grid;place-items:center;font-weight:800}
+h1{font-size:28px;margin:0} .sub{color:var(--muted);margin:4px 0 24px}
+.bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--pill);padding:10px 16px;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow);position:sticky;top:12px;z-index:5}
+.bar .track{flex:1;height:10px;background:#EDEBE5;border-radius:999px;overflow:hidden}
+.bar .fill{height:100%;width:50%;background:var(--primary);border-radius:999px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.card h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 12px}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sw{border-radius:10px;padding:12px;color:#fff;font-size:12px;min-height:64px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid transparent;font-weight:600;cursor:pointer;font-size:15px}
+.btn-primary{background:var(--primary);color:var(--primary-ink)}
+.btn-secondary{background:#fff;color:var(--text);border-color:var(--border)}
+.btn-ghost{background:transparent;color:var(--primary)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;font-size:12px;font-weight:600;background:#EFF6F5;color:var(--primary);border-radius:999px;padding:4px 10px;border:1px solid #D7E8E6}
+.task{display:flex;gap:12px;align-items:flex-start;padding:12px;border:1px solid var(--border);border-radius:10px;margin:8px 0;background:#fff}
+.check{width:24px;height:24px;border-radius:50%;border:2px solid #CBD5D1;flex:none;margin-top:2px}
+.check.done{background:var(--success);border-color:var(--success);color:#fff;display:grid;place-items:center;font-size:14px}
+.goal{border-left:4px solid var(--primary);padding-left:12px}
+.badge{font-size:12px;background:#FFF7E6;border:1px solid #F5D9A0;color:#8A5A00;border-radius:999px;padding:3px 10px}
+.thread{border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.msg{padding:12px 14px;font-size:14px} .msg.ai{background:#F1F8F7} .msg.user{background:#fff;text-align:right}
+.input{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:#fff}
+.input input{flex:1;min-height:44px;border-radius:999px;border:1px solid var(--border);padding:0 16px;font-size:14px}
+.type-scale div{border-bottom:1px dashed var(--border);padding:6px 0}
+.muted{color:var(--muted)} .small{font-size:13px}
+.progress{height:10px;background:#EDEBE5;border-radius:999px;overflow:hidden} .progress>div{height:100%;background:var(--success)}
+.sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="logo">P</div><div><h1>Plannlyai — Design System</h1><div class="sub">Phase D preview · calm · ADHD-friendly · forward-only · Big goals. Small steps. Real progress.</div></div></div>
+
+  <div class="bar" role="status" aria-label="Daily progress: 2 of 4 done, 50 percent complete">
+    <strong>Today</strong><div class="track"><div class="fill"></div></div><span class="small">2 of 4 done</span>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h2>1 · Tokens — Color</h2>
+      <div class="swatches">
+        <div class="sw" style="background:#0F766E">primary<br/>#0F766E</div>
+        <div class="sw" style="background:#15803D">success<br/>#15803D</div>
+        <div class="sw" style="background:#D97706">warm focus<br/>#D97706</div>
+        <div class="sw" style="background:#1E1E1E">text<br/>#1E1E1E</div>
+      </div>
+      <p class="small muted">bg #F7F6F3 · surface #FFFFFF · border #E8E4DC · muted #6B6B6B · contrast ≥ 4.5:1</p>
+    </div>
+    <div class="card"><h2>2 · Typography</h2>
+      <div class="type-scale">
+        <div style="font-size:28px;font-weight:700">Goal title — 28 / bold</div>
+        <div style="font-size:20px;font-weight:600">Section — 20 / semibold</div>
+        <div style="font-size:16px;font-weight:500">Task title — 16 / medium</div>
+        <div style="font-size:14px">Body — 14 / regular. Line-height 1.5 for readability.</div>
+        <div class="small muted">12 / 14 / 16 / 20 / 24 / 32 scale · Inter / system stack</div>
+      </div>
+    </div>
+    <div class="card"><h2>3 · Buttons — forward only (no defer)</h2>
+      <div class="btn-row">
+        <button class="btn btn-primary">✓ Complete</button>
+        <button class="btn btn-secondary">⤷ Break down</button>
+        <button class="btn btn-ghost">▶ Start</button>
+      </div>
+      <p class="small muted">No “Not today / Defer” button. Replan goes via Assistant. Min-height 44px.</p>
+    </div>
+    <div class="card"><h2>4 · Goal card + progress</h2>
+      <div class="goal"><strong>Launch coaching business by Dec</strong><br/><span class="small muted">Why: financial independence · Next: define ideal client</span></div>
+      <div style="height:10px"></div><div class="progress" role="img" aria-label="Goal 35 percent complete"><div style="width:35%"></div></div>
+      <p class="small">Month: Define offer · Week: Ideal client · Today: write 1 person <span class="chip">contributes to Goal</span></p>
+    </div>
+    <div class="card"><h2>5 · Today list</h2>
+      <div class="task"><div class="check done">✓</div><div><strong>Put on workout clothes</strong><br/><span class="small muted">Quick win · 2 min · <span class="chip">Fitness goal</span></span></div></div>
+      <div class="task"><div class="check"></div><div><strong>Write 1 ideal client</strong><br/><span class="small muted">Priority 1 · 5 min · <span class="chip">Coaching biz</span> · <span class="badge">⏰ reminder 10am</span></span></div></div>
+      <div class="task"><div class="check"></div><div><strong>Contact Sarah — follow-up</strong><br/><span class="small muted">Priority 2 · 10 min · <span class="badge">✉️ from your voice</span></span></div></div>
+    </div>
+    <div class="card"><h2>6 · Dashboard widgets</h2>
+      <p><strong>What am I working toward?</strong><br/><span class="small">Coaching biz (35%) · Fitness (60%) · Data cert (10%)</span></p>
+      <p><strong>What matters today?</strong><br/><span class="small">2 priorities · 1 quick win · 1 meeting 2pm</span></p>
+      <p><strong>Coming up?</strong><br/><span class="small">Fri: client call · Mon: weekly reset</span></p>
+    </div>
+    <div class="card"><h2>7 · Assistant</h2>
+      <div class="thread">
+        <div class="msg ai">Let’s make it smaller. Next 5 min: write just <em>one</em> person you’d love to help.</div>
+        <div class="msg user">Only have 20 min today</div>
+        <div class="msg ai">Got it — reworked today: 1) one client note (5m) 2) quick win (2m). <span class="chip">diff preview → Apply</span></div>
+        <div class="input"><input placeholder="Ask: What should I focus on?"/><button class="btn btn-primary">Send</button></div>
+      </div>
+    </div>
+    <div class="card"><h2>8 · Automation badge + recovery</h2>
+      <p><span class="badge">📋 Template: Follow-up · ✉️ Your voice · ⌨️ Your input</span></p>
+      <p class="small muted">Every auto draft shows its source + View / Edit / Undo. You approve send.</p>
+      <div class="card" style="background:#F1F8F7">Fell behind? <strong>Let’s figure out what’s next</strong> — keep, drop, or reschedule. No guilt. <br/><br/><span class="btn-row"><button class="btn btn-primary">Recover with assistant</button></span></div>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:24px">A11y: keyboard tab + space to complete, <kbd>b</kbd> to break down · screen-reader labels on all progress · reduced-motion respected · file: <code>design.html</code></p>
+</div>
+</body>
+</html>

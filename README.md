@@ -6,116 +6,74 @@ Plannlyai is a personal productivity and execution assistant that turns goals an
 
 Tell us what you want to accomplish. We'll help you figure out what needs to happen next — and help you follow through.
 
-## Why Plannlyai
+## Status
 
-Most people don't struggle with knowing *what* they want. They struggle with the execution gap:
+v1 built locally through Phase 7: Goal-to-Action, Today + Dashboard, Assistant, Reminders + Scheduling, Email voice/templates, Workflows. See [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md) and [`Docxs/Plannly-Product Requirements Document (PRD).md`](Docxs/Plannly-Product%20Requirements%20Document%20(PRD).md).
 
-**Intention → Planning → Action → Follow-through → Completion**
+## Stack (all free, $0)
 
-Traditional tools make the user do most of the organizational thinking. Plannlyai does more of that thinking for you.
+- **App:** Next.js 15 (App Router), self-hosted on this device — no Vercel
+- **DB:** Local PostgreSQL 18 + Prisma — no Supabase
+- **Auth:** Better Auth (email/password + optional Google)
+- **Storage:** Local disk (`./storage/uploads`), R2 free-tier optional later
+- **AI:** Free-only — offline templates + local Ollama first; Gemini/Groq/HF/OpenRouter free tiers optional. No paid keys required.
 
-Designed for anyone who struggles with organization and follow-through, with particular consideration for ADHD and executive-function challenges. No diagnosis required.
+## Getting started (Windows)
 
-Core loop:
+```cmd
+:: 1. Postgres 18 running on 5432 with database "plannlyai"
+:: 2. Copy env and edit passwords
+copy .env.example .env
 
-```
-Goal → Breakdown → Action → Reminder → Completion → Progress → Adaptation
-```
-
-## Features
-
-### Priority 1 — Goal-to-Action System
-- Natural-language goal creation ("I want to launch my coaching business this year")
-- Automatic breakdown: Goal → Milestones → Monthly outcomes → Weekly objectives → Daily actions → Tiny next step
-- Plan review & collaboration ("This is too much", "Break this down further")
-- Today / Daily Focus view — "What do I actually need to focus on today?"
-- Task simplification to make the next action obvious
-- Progress visualization (Today → Week → Month → Goal)
-- Goal recovery — restart without rebuilding from scratch
-
-### Priority 2 — Personal Assistant
-- Natural-language interaction: "What should I focus on today?", "I'm overwhelmed, help me decide first", "I fell behind, help me restart"
-- Re-planning, recovery, and progress Q&A
-
-### Priority 3 — Reminders & Scheduling
-- Contextual, action-oriented reminders (not just "Task due today")
-- Scheduling assistant + follow-up reminders
-- Upcoming commitments surface
-
-### Priority 4 — Personalized Communication
-- Email assistant that learns your tone, formality, greetings, sign-offs, and templates
-- Drafts that sound like you — you stay in control of send
-
-### Priority 5 — Workflow Automation
-- Plain-language repeatable workflows (e.g. "Monday Weekly Reset")
-- Personal templates for emails, routines, and goals
-- Calendar scheduling, reminder, and email automations — explicit and visible with their source (template / voice / input)
-
-### Product Experience
-- **Today:** priorities, quick wins, scheduled commitments, goal connection, daily progress status bar
-- **Dashboard:** What am I working toward? What matters today? What is coming up? Am I making progress?
-- Forward-only actions (complete, break down, start) — no quiet defer
-- Calm, helpful, non-judgmental tone. Accountability without pressure.
-
-See [`Docxs/Plannly-Product Requirements Document (PRD).md`](Docxs/Plannly-Product%20Requirements%20Document%20(PRD).md) for the full spec.
-
-## Planned Stack
-
-Editor-agnostic (no lock-in to Cursor / VS Code / OpenCode).
-
-- **App:** Next.js (local-first)
-- **DB / ORM:** SQLite + Prisma
-- **Auth:** Auth.js
-- **Storage:** local `./storage/`
-
-> Status: PRD complete, implementation not yet started. Stack may evolve — this README will be updated when scaffolding lands.
-
-## Getting Started
-
-```bash
-# 1. Clone
-git clone https://github.com/Thagirlnextdoor/Plannlyai.git
-cd Plannlyai
-
-# 2. Install (once scaffolding lands)
+:: 3. Install + set up DB
 npm install
+npx prisma db push
+npm run db:seed
 
-# 3. Run
+:: 4. Run
 npm run dev
+:: open http://localhost:3000/today
 ```
 
-No setup steps yet — repo currently contains product spec only.
+Optional: `set AI_PROVIDER=ollama` + install Ollama + `ollama pull llama3.1:8b` for local LLM plans.
 
-## Project Structure
+## Scripts
+
+| Command | What |
+|---|---|
+| `npm run dev` | Dev server (:3000) |
+| `npm run build` / `npm run start` | Production build / serve on-device |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm test` | Vitest unit tests (offline-safe) |
+| `npm run worker` | Run due reminders once |
+| `npx prisma db push` | Sync schema to local PG |
+| `npm run db:seed` | Demo user + goal |
+
+Reminders on a schedule (Task Scheduler, free):
+`POST http://localhost:3000/api/reminders/run` with body `{ "secret": "<CRON_SECRET>" }`.
+
+## Backup (free)
+
+```cmd
+"C:\Program Files\PostgreSQL\18\bin\pg_dump.exe" -U postgres -h localhost plannlyai > backup-%date%.sql
+xcopy storage backup-storage /E /I
+```
+
+## Project structure
 
 ```
-Plannlyai/
-├── README.md
-└── Docxs/
-    └── Plannly-Product Requirements Document (PRD).md
+app/            routes (today, dashboard, goals, tasks, calendar, automations, assistant, design, settings/voice)
+components/     DailyBar, AppNav, shells, email composer
+lib/            db, auth, session, ai, plan, today, assistant, reminders, schedule, email, workflows
+prisma/         schema.prisma + seed.ts
+worker/         reminders.ts (cron entry)
+tests/          vitest suites
+storage/uploads local file backend ($0)
 ```
-
-## Roadmap
-
-- [ ] Phase 0–1: Scaffolding, Goal-to-Action MVP
-- [ ] Phase 2: Today view + daily progress bar + goals-at-a-glance dashboard
-- [ ] Phase 3: Assistant + recovery / re-plan
-- [ ] Phase 4–6: Reminders, scheduling, email automations (explicit + visible)
-- [ ] Phase 7: Polish, templates, workflows
-
-## What Plannlyai Is Not
-
-- Not a complicated project-management platform
-- Not a generic AI chatbot
-- Not a basic to-do list or calendar replacement
-- Not a rigid productivity methodology
-- Not a system that makes you maintain your own system
 
 ## Contributing
 
-Issues and PRs welcome. Please keep the core principle in mind:
-
-> Every small action should have context — why am I doing this, what does it contribute to, what comes next?
+Keep the core principle: *every small action should have context — why am I doing this, what does it contribute to, what comes next?* Forward-only actions (complete / break down / start) — no quiet defer. Calm, non-judgmental copy, no guilt.
 
 ## License
 

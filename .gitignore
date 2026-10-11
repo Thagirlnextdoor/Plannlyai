@@ -1,0 +1,27 @@
+# deps / build
+node_modules/
+.next/
+out/
+dist/
+
+# test output
+test-results/
+playwright-report/
+*.tsbuildinfo
+
+# env — NEVER commit real secrets
+.env
+.env*.local
+
+# prisma
+prisma/migrations/migration_lock.toml
+
+# uploads (local disk backend, free default)
+storage/uploads/*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.cursor/

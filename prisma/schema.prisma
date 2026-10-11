@@ -1,0 +1,249 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Better Auth tables (required) ----------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  goals         Goal[]
+  tasks         Task[]
+  events        Event[]
+  reminders     Reminder[]
+  templates     EmailTemplate[]
+  voice         VoiceProfile?
+  workflows     Workflow[]
+  threads       AssistantThread[]
+  eventLog      EventLog[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ---------- Plannlyai app ----------
+
+enum GoalStatus {
+  active
+  done
+  archived
+}
+
+enum NodeStatus {
+  todo
+  doing
+  done
+  dropped
+}
+
+model Goal {
+  id         String     @id @default(cuid())
+  userId     String
+  title      String
+  outcome    String?
+  targetDate DateTime?
+  importance String?
+  status     GoalStatus @default(active)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  milestones Milestone[]
+  tasks      Task[]
+}
+
+model Milestone {
+  id        String       @id @default(cuid())
+  goalId    String
+  title     String
+  order     Int          @default(0)
+  status    NodeStatus   @default(todo)
+  goal      Goal         @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  monthlies MonthlyOutcome[]
+}
+
+model MonthlyOutcome {
+  id          String       @id @default(cuid())
+  milestoneId String
+  title       String
+  month       String?
+  status      NodeStatus   @default(todo)
+  milestone   Milestone    @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  weeklies    WeeklyObjective[]
+}
+
+model WeeklyObjective {
+  id        String         @id @default(cuid())
+  monthlyId String
+  title     String
+  weekStart DateTime?
+  status    NodeStatus     @default(todo)
+  monthly   MonthlyOutcome @relation(fields: [monthlyId], references: [id], onDelete: Cascade)
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  userId      String
+  goalId      String?
+  parentId    String?
+  title       String
+  type        String     @default("daily")
+  status      NodeStatus @default(todo)
+  estimateMin Int?
+  dueAt       DateTime?
+  order       Int        @default(0)
+  source      String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal        Goal?      @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  parent      Task?      @relation("Subtasks", fields: [parentId], references: [id], onDelete: Cascade)
+  subtasks    Task[]     @relation("Subtasks")
+  reminders   Reminder[]
+}
+
+model Event {
+  id       String   @id @default(cuid())
+  userId   String
+  title    String
+  startsAt DateTime
+  endsAt   DateTime?
+  source   String?
+  goalId   String?
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Reminder {
+  id       String    @id @default(cuid())
+  userId   String
+  taskId   String?
+  rule     String    @default("once")
+  nextRunAt DateTime?
+  context  String?
+  status   String    @default("active")
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task     Task?     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  runs     ReminderRun[]
+}
+
+model ReminderRun {
+  id         String   @id @default(cuid())
+  reminderId String
+  ranAt      DateTime @default(now())
+  result     String?
+  reminder   Reminder @relation(fields: [reminderId], references: [id], onDelete: Cascade)
+}
+
+model VoiceProfile {
+  id         String  @id @default(cuid())
+  userId     String  @unique
+  tone       String?
+  formality  String?
+  greeting   String?
+  signoff    String?
+  samples    String?
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EmailTemplate {
+  id        String  @id @default(cuid())
+  userId    String
+  name      String
+  subject   String?
+  body      String
+  voiceNotes String?
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Workflow {
+  id       String       @id @default(cuid())
+  userId   String
+  name     String
+  steps    String
+  schedule String?
+  user     User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  runs     WorkflowRun[]
+}
+
+model WorkflowRun {
+  id         String   @id @default(cuid())
+  workflowId String
+  ranAt      DateTime @default(now())
+  result     String?
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+}
+
+model AssistantThread {
+  id        String    @id @default(cuid())
+  userId    String
+  goalId    String?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+}
+
+model Message {
+  id       String          @id @default(cuid())
+  threadId String
+  role     String
+  body     String
+  planDiff String?
+  createdAt DateTime       @default(now())
+  thread   AssistantThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+}
+
+// Free local analytics (no paid tracker required for v1)
+model EventLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  type      String
+  data      String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
