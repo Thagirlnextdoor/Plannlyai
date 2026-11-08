@@ -19,7 +19,10 @@ prisma/migrations/migration_lock.toml
 # uploads (local disk backend, free default)
 storage/uploads/*
 
-# OS / editor
+# android signing (keystore + passwords must NEVER be committed)
+android/
+*.keystore
+*.jks
 .DS_Store
 Thumbs.db
 .vscode/

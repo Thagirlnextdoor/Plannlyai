@@ -1,0 +1,39 @@
+{
+  "packageId": "ai.plannlyai.twa",
+  "host": "former-streams-offered-jar.trycloudflare.com",
+  "name": "Plannlyai",
+  "launcherName": "Plannlyai",
+  "display": "standalone",
+  "themeColor": "#0F766E",
+  "themeColorDark": "#0F766E",
+  "navigationColor": "#0F766E",
+  "navigationColorDark": "#0F766E",
+  "navigationDividerColor": "#0F766E",
+  "navigationDividerColorDark": "#0F766E",
+  "backgroundColor": "#F7F6F3",
+  "enableNotifications": true,
+  "startUrl": "/today",
+  "iconUrl": "https://former-streams-offered-jar.trycloudflare.com/icons/icon-512.png",
+  "maskableIconUrl": "https://former-streams-offered-jar.trycloudflare.com/icons/icon-512-maskable.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "C:\\Users\\USER\\Desktop\\Plannlyai\\android\\plannly-release.keystore",
+    "alias": "plannly"
+  },
+  "appVersion": "1.0.0",
+  "appVersionCode": 1,
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://former-streams-offered-jar.trycloudflare.com/manifest.webmanifest",
+  "fullScopeUrl": "https://former-streams-offered-jar.trycloudflare.com/",
+  "fallbackType": "customtabs",
+  "orientation": "portrait",
+  "enableSiteSettingsShortcut": true,
+  "minSdkVersion": 24,
+  "fingerprints": [
+    {
+      "name": "plannly-release",
+      "value": "08:A9:E1:10:79:39:55:77:1F:6D:CB:DB:8B:07:B4:F7:EC:C9:32:3E:CC:B3:FE:60:79:A7:90:4E:B5:AA:1F:E3"
+    }
+  ],
+  "shortcuts": []
+}
